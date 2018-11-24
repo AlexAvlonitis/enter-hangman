@@ -7,7 +7,6 @@ export default class WordInput extends Component {
 
     this.state = {
       value: '',
-      wordProgress: [],
       allLetters: [],
       word: null,
       lives: 5
@@ -36,16 +35,11 @@ export default class WordInput extends Component {
   checkLetter = () => {
     const indexes = this.getAllIndexes()
     if(indexes.length > 0) {
-      this.addLetterToWordProgress();
       this.revealLetters(indexes);
       this.checkGameStatus();
     } else {
       this.addToFailedLetters();
       this.reduceLives();
-      if (this.state.lives === 1) {
-        alert('Game Over');
-        window.location.reload();
-      }
     }
   }
 
@@ -53,10 +47,6 @@ export default class WordInput extends Component {
     indexes.map((index) => {
       this.findInput(index).value = this.state.word[index];
     })
-  }
-
-  addLetterToWordProgress = () => {
-    this.state.wordProgress.push(this.state.value);
   }
 
   findInput = (index) => {
@@ -69,6 +59,10 @@ export default class WordInput extends Component {
 
   reduceLives = () => {
     this.setState({ lives: this.state.lives - 1 });
+    if (this.state.lives === 1) {
+      alert('Game Over');
+      window.location.reload();
+    }
   }
 
   checkGameStatus = () => {
@@ -79,14 +73,20 @@ export default class WordInput extends Component {
   }
 
   wordMatch = () => {
-    const wordWithoutEdges = this.state.word.slice(1, this.state.word.length - 1);
-    return (this.state.wordProgress.join('') === wordWithoutEdges.join('')) ? true : false
+    let currentWord = [];
+    const fields = document.getElementsByClassName('WordInput-bottom-border-input');
+
+    for (let i = 0; i < fields.length; i++) {
+      currentWord.push(fields[i].value)
+    };
+
+    return (currentWord.join('') === this.state.word.join('')) ? true : false
   }
 
   handleChange(event) {
     this.setState({value: event.target.value}, () => {
       this.checkLetter();
-      this.findInput('999').value = '';
+      document.getElementById('letter-input').value = '';
     });
   }
 
@@ -129,7 +129,7 @@ export default class WordInput extends Component {
           <h3>Enter a letter bellow</h3>
           <input
             className="WordInput-enter-letter-input"
-            data-index='999'
+            id='letter-input'
             onChange={this.handleChange}
           />
         </div>
