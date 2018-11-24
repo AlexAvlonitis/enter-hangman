@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './WordInput.css';
 
 export default class WordInput extends Component {
@@ -23,19 +23,35 @@ export default class WordInput extends Component {
   }
 
   checkLetter = (index) => {
-    this.state.allLetters.push(this.state.value);
-
     if(this.state.value === this.state.word[index]) {
-      this.state.wordProgress.push(this.state.value);
+      this.addLetterToWordProgress();
       this.checkGameStatus();
+      this.findInput(index).setAttribute('disabled', true);
     } else {
-      this.setState({ lives: this.state.lives - 1 });
-      document.querySelector(`[data-index='${index}']`).value = '';
+      this.addToFailedLetters();
+      this.reduceLives();
+      this.findInput(index).value = '';
       if (this.state.lives === 1) {
         alert('Game Over');
         window.location.reload();
       }
     }
+  }
+
+  addLetterToWordProgress = () => {
+    this.state.wordProgress.push(this.state.value);
+  }
+
+  findInput = (index) => {
+    return document.querySelector(`[data-index='${index}']`);
+  }
+
+  addToFailedLetters = () => {
+    this.state.allLetters.push(this.state.value);
+  }
+
+  reduceLives = () => {
+    this.setState({ lives: this.state.lives - 1 });
   }
 
   checkGameStatus = () => {
@@ -53,9 +69,7 @@ export default class WordInput extends Component {
   handleChange(event) {
     const datasetIndex = event.target.dataset.index;
 
-    this.setState({
-      value: event.target.value
-    }, () => {
+    this.setState({value: event.target.value}, () => {
       this.checkLetter(datasetIndex);
     });
   }
@@ -86,7 +100,6 @@ export default class WordInput extends Component {
         />
       )
     }
-
   }
 
   renderInput = () => {
@@ -97,12 +110,20 @@ export default class WordInput extends Component {
     )
   }
 
+  renderPickedWord = () => {
+    return (
+      <Fragment>
+        <button onClick={() => alert(this.props.pickedWord)}>Cheat, show word</button>
+      </Fragment>
+    )
+  }
+
   render() {
     return (
       <div>
         <h3>Lives: {this.state.lives} </h3>
-        <p> Picked Word: {this.props.pickedWord} </p>
-        <p> Letters Selected so far: </p>
+        <p> Picked Word: {this.renderPickedWord()} </p>
+        <p> Letters that don't exist: </p>
         <p> {this.state.allLetters.join(', ')} </p>
         { this.state.word ?
           this.renderInput() :
