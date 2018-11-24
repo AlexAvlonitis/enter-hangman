@@ -16,26 +16,43 @@ export default class WordInput extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.pickedWord !== this.props.pickedWord) {
       this.setState({word: this.props.pickedWord.split('')})
     }
   }
 
-  checkLetter = (index) => {
-    if(this.state.value === this.state.word[index]) {
+  getAllIndexes() {
+    let indexes = [], i = -1;
+
+    while ((i = this.state.word.indexOf(this.state.value, i + 1)) != -1) {
+      if(i === 0) { continue; } // don't save if value is 0, because it's the first revealed letter
+      if(i === this.state.word.length - 1) { continue; } // same as above for last letter
+      indexes.push(i);
+    }
+    return indexes;
+  }
+
+  checkLetter = () => {
+    const indexes = this.getAllIndexes()
+    if(indexes.length > 0) {
       this.addLetterToWordProgress();
+      this.revealLetters(indexes);
       this.checkGameStatus();
-      this.findInput(index).setAttribute('disabled', true);
     } else {
       this.addToFailedLetters();
       this.reduceLives();
-      this.findInput(index).value = '';
       if (this.state.lives === 1) {
         alert('Game Over');
         window.location.reload();
       }
     }
+  }
+
+  revealLetters = (indexes) => {
+    indexes.map((index) => {
+      this.findInput(index).value = this.state.word[index];
+    })
   }
 
   addLetterToWordProgress = () => {
@@ -67,10 +84,9 @@ export default class WordInput extends Component {
   }
 
   handleChange(event) {
-    const datasetIndex = event.target.dataset.index;
-
     this.setState({value: event.target.value}, () => {
-      this.checkLetter(datasetIndex);
+      this.checkLetter();
+      this.findInput('999').value = '';
     });
   }
 
@@ -78,6 +94,7 @@ export default class WordInput extends Component {
     if (index === 0) {
       return (
         <input
+          className="WordInput-bottom-border-input"
           value={word}
           disabled
           key={index}
@@ -86,6 +103,7 @@ export default class WordInput extends Component {
     } else if (this.state.word.length - 1 === index) {
       return (
         <input
+          className="WordInput-bottom-border-input"
           value={word}
           disabled
           key={index}
@@ -94,7 +112,8 @@ export default class WordInput extends Component {
     } else {
       return (
         <input
-          onChange={this.handleChange}
+          className="WordInput-bottom-border-input"
+          disabled
           data-index={index}
           key={index}
         />
@@ -106,15 +125,23 @@ export default class WordInput extends Component {
     return (
       <div>
         { this.state.word.map(this.renderInputs) }
+        <div>
+          <h3>Enter a letter bellow</h3>
+          <input
+            className="WordInput-enter-letter-input"
+            data-index='999'
+            onChange={this.handleChange}
+          />
+        </div>
       </div>
     )
   }
 
   renderPickedWord = () => {
     return (
-      <Fragment>
-        <button onClick={() => alert(this.props.pickedWord)}>Cheat, show word</button>
-      </Fragment>
+      <button onClick={() => alert(this.props.pickedWord)}>
+        Cheat, show word
+      </button>
     )
   }
 
