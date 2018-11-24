@@ -18,7 +18,7 @@ class WordInput extends Component {
   render() {
     return (
       <div className="WordInput">
-
+        Welcome to hangman
       </div>
     );
   }

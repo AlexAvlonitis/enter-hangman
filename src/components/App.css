@@ -9,3 +9,14 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.App-start-game-btn {
+  padding: 2rem;
+  font-size: 2rem;
+  background-color: #90C3D4;
+  font-weight: bold;
+}
+
+.App-start-game-btn:hover {
+  cursor: pointer;
+}
