@@ -130,6 +130,7 @@ export default class WordInput extends Component {
           <input
             className="WordInput-enter-letter-input"
             id='letter-input'
+            autoFocus
             onChange={this.handleChange}
           />
         </div>
