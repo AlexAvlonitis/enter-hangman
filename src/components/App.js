@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import WordInput from './word/WordInput';
+import GameIndex from './game/Index';
 import './App.css';
 
 class App extends Component {
@@ -25,7 +25,7 @@ class App extends Component {
       <div className="App">
         <h1> Enter HangMan </h1>
         { this.state.gameStarted ?
-          <WordInput /> :
+          <GameIndex /> :
           this.renderStartGameButton()
         }
       </div>

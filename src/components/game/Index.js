@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import WordInput from './WordInput';
 import wordsText from '../../words.txt';
 import { readFile } from '../../services/readFile'
-import './WordInput.css';
+import './Index.css';
 
-class WordInput extends Component {
+class Index extends Component {
   constructor(props) {
     super(props);
 
@@ -25,20 +26,11 @@ class WordInput extends Component {
     this.setState({pickedWord});
   }
 
-  renderWord = () => {
-    return (
-      <div>
-        <p> Welcome </p>
-        <p> This is the picked word: {this.state.pickedWord}</p>
-      </div>
-    )
-  }
-
   render() {
     return (
-      <div className="WordInput">
+      <div className="Index">
         { this.state.wordsArray ?
-          this.renderWord() :
+          <WordInput pickedWord={this.state.pickedWord}/> :
           <p>Loading...</p>
         }
       </div>
@@ -46,4 +38,4 @@ class WordInput extends Component {
   }
 }
 
-export default WordInput;
+export default Index;
