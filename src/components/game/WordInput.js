@@ -143,15 +143,16 @@ export default class WordInput extends Component {
 
   render() {
     return (
-      <div>
-        <h3>Tries: {this.props.tries} </h3>
+      <div className="WordInput-align-center">
         <p> Picked Word: {this.renderPickedWord()} </p>
-        <p> Letters that don't exist: </p>
-        <p> {this.state.allLetters.join(', ')} </p>
+
         { this.state.word ?
           this.renderInput() :
           <p> Loading... </p>
         }
+
+        <p> Letters that don't exist: </p>
+        <p> {this.state.allLetters.join(', ')} </p>
       </div>
     );
   }

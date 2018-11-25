@@ -9,24 +9,26 @@ class App extends Component {
     this.state = { gameStarted: false }
   }
 
-  renderStartGameButton = () => {
+  renderStartScreen = () => {
     return (
-      <button
-        className="App-start-game-btn"
-        onClick={() => this.setState({gameStarted: true})}
-      >
-        Start Game
-      </button>
+      <div className="App-text-center">
+        <h1> Enter HangMan </h1>
+        <button
+          className="App-start-game-btn"
+          onClick={() => this.setState({gameStarted: true})}
+        >
+          Start Game
+        </button>
+      </div>
     )
   }
 
   render() {
     return (
       <div className="App">
-        <h1> Enter HangMan </h1>
         { this.state.gameStarted ?
           <GameIndex /> :
-          this.renderStartGameButton()
+          this.renderStartScreen()
         }
       </div>
     );

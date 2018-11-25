@@ -33,11 +33,11 @@ class Index extends Component {
 
   reduceTries = () => {
     this.setState({ tries: this.state.tries - 1 }, () => {
-      this.isItOver();
+      this.isItOverYet();
     });
   }
 
-  isItOver = () => {
+  isItOverYet = () => {
     if (this.state.tries === 0) {
       alert('Game Over');
       window.location.reload();
@@ -47,15 +47,19 @@ class Index extends Component {
   render() {
     return (
       <div className="Game-Index">
-        { this.state.wordsArray ?
-          <WordInput
-            pickedWord={this.state.pickedWord}
-            reduceTries={this.reduceTries}
-            tries={this.state.tries}
-          /> :
-          <p>Loading...</p>
-        }
-        <CanvasIndex tries={this.state.tries}/>
+        <div className="Game-Inputs">
+          { this.state.wordsArray ?
+            <WordInput
+              pickedWord={this.state.pickedWord}
+              reduceTries={this.reduceTries}
+              tries={this.state.tries}
+            /> :
+            <p>Loading...</p>
+          }
+        </div>
+        <div className="Game-Canvas">
+          <CanvasIndex tries={this.state.tries} />
+        </div>
       </div>
     );
   }

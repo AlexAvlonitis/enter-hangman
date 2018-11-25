@@ -1,3 +1,13 @@
 .Game-Index {
-  text-align: center;
+  display: flex;
+}
+
+.Game-Inputs {
+  flex: 0 0 65%;
+}
+
+.Game-Canvas {
+  flex: 1;
+  height: 300px;
+  width: 400px;
 }

@@ -104,9 +104,12 @@ export default class Index extends Component {
 
   render() {
     return(
-      <canvas id="myCanvas" width="400" height="300">
-        Your browser does not support the HTML5 canvas tag.
-      </canvas>
+      <div>
+        <canvas id="myCanvas" width="400" height="300">
+          Your browser does not support the HTML5 canvas tag.
+        </canvas>
+        <h3>Tries: {this.props.tries} </h3>
+      </div>
     )
   }
 }
