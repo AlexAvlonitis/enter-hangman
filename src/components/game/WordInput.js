@@ -8,8 +8,7 @@ export default class WordInput extends Component {
     this.state = {
       value: '',
       allLetters: [],
-      word: null,
-      lives: 5
+      word: null
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -39,7 +38,7 @@ export default class WordInput extends Component {
       this.checkGameStatus();
     } else {
       this.addToFailedLetters();
-      this.reduceLives();
+      this.reduceTries();
     }
   }
 
@@ -57,12 +56,8 @@ export default class WordInput extends Component {
     this.state.allLetters.push(this.state.value);
   }
 
-  reduceLives = () => {
-    this.setState({ lives: this.state.lives - 1 });
-    if (this.state.lives === 1) {
-      alert('Game Over');
-      window.location.reload();
-    }
+  reduceTries = () => {
+    this.props.reduceTries()
   }
 
   checkGameStatus = () => {
@@ -149,7 +144,7 @@ export default class WordInput extends Component {
   render() {
     return (
       <div>
-        <h3>Lives: {this.state.lives} </h3>
+        <h3>Tries: {this.props.tries} </h3>
         <p> Picked Word: {this.renderPickedWord()} </p>
         <p> Letters that don't exist: </p>
         <p> {this.state.allLetters.join(', ')} </p>

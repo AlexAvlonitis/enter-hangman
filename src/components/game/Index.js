@@ -9,7 +9,11 @@ class Index extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { wordsArray: null, pickedWord: null }
+    this.state = {
+      wordsArray: null,
+      pickedWord: null,
+      tries: 5
+    }
   }
 
   componentDidMount = () => {
@@ -27,11 +31,23 @@ class Index extends Component {
     this.setState({pickedWord});
   }
 
+  reduceTries = () => {
+    this.setState({ tries: this.state.tries - 1 });
+    if (this.state.tries === 1) {
+      alert('Game Over');
+      window.location.reload();
+    }
+  }
+
   render() {
     return (
       <div className="Game-Index">
         { this.state.wordsArray ?
-          <WordInput pickedWord={this.state.pickedWord} /> :
+          <WordInput
+            pickedWord={this.state.pickedWord}
+            reduceTries={this.reduceTries}
+            tries={this.state.tries}
+          /> :
           <p>Loading...</p>
         }
         <CanvasIndex />
