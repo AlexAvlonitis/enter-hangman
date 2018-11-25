@@ -6,7 +6,10 @@ export const readFile = (file) => {
     if(f.readyState === 4) {
       if(f.status === 200 || f.status === 0) {
         let res = f.responseText;
-        res.split("\n").map((word) => { wordsArray.push(word) })
+        res.split("\n").map((word) => {
+          if (word.length > 2)
+            wordsArray.push(word)
+        })
       }
     }
   }
