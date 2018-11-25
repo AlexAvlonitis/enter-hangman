@@ -9,6 +9,13 @@ class App extends Component {
     this.state = { gameStarted: false }
   }
 
+  componentDidMount = () => {
+    document.addEventListener('keypress', (e) => {
+      if (e.keyCode === 13)
+        this.setState({ gameStarted: true })
+    });
+  }
+
   renderStartScreen = () => {
     return (
       <div className="App-text-center">
@@ -19,6 +26,9 @@ class App extends Component {
         >
           Start Game
         </button>
+        <p>
+          <small>Or press Enter</small>
+        </p>
       </div>
     )
   }
