@@ -121,7 +121,7 @@ export default class WordInput extends Component {
       <div>
         { this.state.word.map(this.renderInputs) }
         <div>
-          <h3>Enter a letter bellow</h3>
+          <h3>Enter a letter below</h3>
           <input
             className="WordInput-enter-letter-input"
             id='letter-input'
