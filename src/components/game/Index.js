@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import WordInput from './WordInput';
+import CanvasIndex from '../canvas/Index';
 import wordsText from '../../words.txt';
 import { readFile } from '../../services/readFile'
 import './Index.css';
@@ -28,11 +29,12 @@ class Index extends Component {
 
   render() {
     return (
-      <div className="Index">
+      <div className="Game-Index">
         { this.state.wordsArray ?
-          <WordInput pickedWord={this.state.pickedWord}/> :
+          <WordInput pickedWord={this.state.pickedWord} /> :
           <p>Loading...</p>
         }
+        <CanvasIndex />
       </div>
     );
   }
