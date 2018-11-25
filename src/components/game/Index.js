@@ -39,7 +39,7 @@ class Index extends Component {
 
   isItOverYet = () => {
     if (this.state.tries === 0) {
-      alert('Game Over');
+      alert(`Game Over! \nThe word was: ${this.state.pickedWord}`);
       window.location.reload();
     }
   }
