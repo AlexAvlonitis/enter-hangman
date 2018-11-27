@@ -16,8 +16,9 @@ class Index extends Component {
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     const wordsArray = readFile(wordsText);
+    console.log(wordsArray)
     this.setState({
       wordsArray
     }, () => {
@@ -25,19 +26,19 @@ class Index extends Component {
     });
   }
 
-  randomWordPicker = () => {
+  randomWordPicker() {
     const {wordsArray} = this.state;
     const pickedWord = wordsArray[Math.floor(Math.random() * wordsArray.length)];
     this.setState({pickedWord});
   }
 
-  reduceTries = () => {
+  reduceTries() {
     this.setState({ tries: this.state.tries - 1 }, () => {
       this.isItOverYet();
     });
   }
 
-  isItOverYet = () => {
+  isItOverYet() {
     if (this.state.tries === 0) {
       alert(`Game Over! \nThe word was: ${this.state.pickedWord}`);
       window.location.reload();
