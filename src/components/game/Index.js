@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import WordInput from './WordInput';
 import CanvasIndex from '../canvas/Index';
-import wordsText from '../../words.txt';
 import { readFile } from '../../services/readFile'
 import './Index.css';
 
@@ -17,7 +16,7 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    const wordsArray = readFile(wordsText);
+    const wordsArray = readFile();
     console.log(wordsArray)
     this.setState({
       wordsArray
