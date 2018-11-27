@@ -11,12 +11,14 @@ class Index extends Component {
     this.state = {
       wordsArray: null,
       pickedWord: null,
-      tries: 6
+      tries: 6,
+      level: 1
     }
   }
 
   componentDidMount() {
-    const wordsArray = readFile();
+    const {level} = this.state;
+    const wordsArray = readFile(level);
     console.log(wordsArray)
     this.setState({
       wordsArray
@@ -31,8 +33,9 @@ class Index extends Component {
     this.setState({pickedWord});
   }
 
-  reduceTries() {
-    this.setState({ tries: this.state.tries - 1 }, () => {
+  reduceTries = () => {
+    const {tries} = this.state;
+    this.setState({ tries: tries - 1 }, () => {
       this.isItOverYet();
     });
   }
@@ -45,20 +48,17 @@ class Index extends Component {
   }
 
   render() {
+    const {tries, pickedWord} = this.state;
     return (
       <div className="Game-Index">
         <div className="Game-Inputs">
-          { this.state.wordsArray ?
-            <WordInput
-              pickedWord={this.state.pickedWord}
-              reduceTries={this.reduceTries}
-              tries={this.state.tries}
-            /> :
-            <p>Loading...</p>
+          { this.state.wordsArray 
+            ? <WordInput {...{pickedWord, tries, reduceTries: this.reduceTries }} /> 
+            : <p>Loading...</p>
           }
         </div>
         <div className="Game-Canvas">
-          <CanvasIndex tries={this.state.tries} />
+          <CanvasIndex {...{tries}} />
         </div>
       </div>
     );
