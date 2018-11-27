@@ -24,8 +24,8 @@ export default class WordInput extends Component {
     let indexes = [], i = -1;
 
     while ((i = this.state.word.indexOf(this.state.value, i + 1)) != -1) {
-      if(i === 0) { continue; } // don't save if value is 0, because it's the first revealed letter
-      if(i === this.state.word.length - 1) { continue; } // same as above for last letter
+      if(i === 0 || i === this.state.word.length - 1) 
+        continue;  // don't save if value is first or last revealed letter
       indexes.push(i);
     }
     return indexes;
@@ -140,7 +140,6 @@ export default class WordInput extends Component {
       </button>
     )
   }
-
 
   render() {
     const {word, allLetters} = this.state;

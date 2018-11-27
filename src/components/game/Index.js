@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import WordInput from './WordInput';
 import CanvasIndex from '../canvas/Index';
 import wordsText from '../../words.txt';
-import axios from 'axios'
 import './Index.css';
+import axios from 'axios';
+import Loading from '../Loading'
 
 class Index extends Component {
   constructor(props) {
@@ -50,10 +51,9 @@ class Index extends Component {
     return (
       <div className="Game-Index">
         <div className="Game-Inputs">
-          { isLoading
-            ?  <p>Loading...</p>
-            : <WordInput {...{pickedWord, tries, reduceTries: this.reduceTries }} /> 
-          }
+          <WordInputWithLoading {
+            ...{isLoading, pickedWord, tries, reduceTries: this.reduceTries}}
+          />
         </div>
         <div className="Game-Canvas">
           <CanvasIndex {...{tries}} />
@@ -64,3 +64,8 @@ class Index extends Component {
 }
 
 export default Index;
+
+const  withLoading = Component => ({isLoading, ...rest}) =>
+  isLoading ? <Loading /> : <WordInput {...rest} />
+
+const WordInputWithLoading = withLoading(WordInput);
