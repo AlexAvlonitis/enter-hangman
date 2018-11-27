@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import WordInput from './WordInput';
 import CanvasIndex from '../canvas/Index';
-import { readFile } from '../../services/readFile'
+import wordsText from '../../words.txt';
+import axios from 'axios'
 import './Index.css';
 
 class Index extends Component {
@@ -9,28 +10,24 @@ class Index extends Component {
     super(props);
 
     this.state = {
-      wordsArray: null,
       pickedWord: null,
       tries: 6,
-      level: 1
+      level: 1,
+      isLoading: true
     }
   }
 
   componentDidMount() {
-    const {level} = this.state;
-    const wordsArray = readFile(level);
-    console.log(wordsArray)
-    this.setState({
-      wordsArray
-    }, () => {
-      this.randomWordPicker();
-    });
+    axios.get(wordsText).then( res => {
+      this.setState({
+         pickedWord: this.randomWordPicker(res.data.split("\n")),
+         isLoading: false,
+      });
+    })
   }
 
-  randomWordPicker() {
-    const {wordsArray} = this.state;
-    const pickedWord = wordsArray[Math.floor(Math.random() * wordsArray.length)];
-    this.setState({pickedWord});
+  randomWordPicker(wordsArray) {
+    return wordsArray[Math.floor(Math.random() * wordsArray.length)];
   }
 
   reduceTries = () => {
@@ -48,13 +45,14 @@ class Index extends Component {
   }
 
   render() {
-    const {tries, pickedWord} = this.state;
+    const {tries, pickedWord, isLoading} = this.state;
+    console.log(isLoading)
     return (
       <div className="Game-Index">
         <div className="Game-Inputs">
-          { this.state.wordsArray 
-            ? <WordInput {...{pickedWord, tries, reduceTries: this.reduceTries }} /> 
-            : <p>Loading...</p>
+          { isLoading
+            ?  <p>Loading...</p>
+            : <WordInput {...{pickedWord, tries, reduceTries: this.reduceTries }} /> 
           }
         </div>
         <div className="Game-Canvas">

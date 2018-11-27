@@ -8,10 +8,10 @@ export default class WordInput extends Component {
     this.state = {
       value: '',
       allLetters: [],
-      word: null
+      word: this.props.pickedWord.split('')
     };
-
     this.handleChange = this.handleChange.bind(this);
+
   }
 
   componentDidUpdate(prevProps) {
@@ -141,18 +141,20 @@ export default class WordInput extends Component {
     )
   }
 
+
   render() {
+    const {word, allLetters} = this.state;
     return (
       <div className="WordInput-align-center">
         <p> Picked Word: {this.renderPickedWord()} </p>
 
-        { this.state.word ?
+        { word ?
           this.renderInput() :
-          <p> Loading... </p>
+          <p> LoadingB... </p>
         }
 
         <p> Letters that don't exist: </p>
-        <p> {this.state.allLetters.join(', ')} </p>
+        <p> {allLetters.join(', ')} </p>
       </div>
     );
   }
