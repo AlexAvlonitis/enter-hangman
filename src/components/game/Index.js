@@ -47,7 +47,7 @@ class Index extends Component {
 
   render() {
     const {tries, pickedWord, isLoading} = this.state;
-    console.log(isLoading)
+    
     return (
       <div className="Game-Index">
         <div className="Game-Inputs">

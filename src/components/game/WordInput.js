@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types'
 import './WordInput.css';
 
 export default class WordInput extends Component {
@@ -7,7 +8,7 @@ export default class WordInput extends Component {
 
     this.state = {
       value: '',
-      allLetters: [],
+      wrongLetters: [],
       word: this.props.pickedWord.split('')
     };
     this.handleChange = this.handleChange.bind(this);
@@ -15,9 +16,8 @@ export default class WordInput extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.pickedWord !== this.props.pickedWord) {
-      this.setState({word: this.props.pickedWord.split('')})
-    }
+    if (prevProps.pickedWord !== this.props.pickedWord) 
+      this.setState({word: this.props.pickedWord.split('')});
   }
 
   getAllIndexes() {
@@ -53,7 +53,7 @@ export default class WordInput extends Component {
   }
 
   addToFailedLetters = () => {
-    this.state.allLetters.push(this.state.value);
+    this.state.wrongLetters.push(this.state.value);
   }
 
   reduceTries = () => {
@@ -71,9 +71,8 @@ export default class WordInput extends Component {
     let currentWord = [];
     const fields = document.getElementsByClassName('WordInput-bottom-border-input');
 
-    for (let i = 0; i < fields.length; i++) {
-      currentWord.push(fields[i].value)
-    };
+    for (let i = 0; i < fields.length; i++)
+      currentWord.push(fields[i].value);
 
     return (currentWord.join('') === this.state.word.join('')) ? true : false
   }
@@ -116,10 +115,10 @@ export default class WordInput extends Component {
     }
   }
 
-  renderInput = () => {
+  renderInput = (word) => {
     return (
       <div>
-        { this.state.word.map(this.renderInputs) }
+        { word.map(this.renderInputs) }
         <div>
           <h3>Enter a letter below</h3>
           <input
@@ -133,28 +132,25 @@ export default class WordInput extends Component {
     )
   }
 
-  renderPickedWord = () => {
-    return (
-      <button onClick={() => alert(this.props.pickedWord)}>
-        Cheat, show word
-      </button>
-    )
-  }
-
   render() {
-    const {word, allLetters} = this.state;
-    return (
+    const {word, wrongLetters} = this.state;
+    const {pickedWord} = this.props;
+    
+    return (  pickedWord && 
       <div className="WordInput-align-center">
-        <p> Picked Word: {this.renderPickedWord()} </p>
-
-        { word ?
-          this.renderInput() :
-          <p> LoadingB... </p>
-        }
-
+        <p>
+          <button onClick={() => alert(pickedWord)}>
+                Cheat, show word
+          </button>
+        </p>
+          { this.renderInput(word) }
         <p> Letters that don't exist: </p>
-        <p> {allLetters.join(', ')} </p>
+        <p> {wrongLetters.join(', ')} </p>
       </div>
     );
   }
+}
+
+WordInput.propTypes = {
+  pickedWord: PropTypes.string.isRequired,
 }
