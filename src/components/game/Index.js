@@ -30,7 +30,7 @@ class Index extends Component {
 
   addToFailedLetters(value) {
     const {failedLetters} = this.state;
-    if (failedLetters.includes(value))
+    if (failedLetters.includes(value) || !value.match(/[a-z]/i))
       return false;
     failedLetters.push(value);
     this.setState({ failedLetters });
