@@ -13,7 +13,6 @@ class Index extends Component {
     this.state = {
       pickedWord: null,
       tries: 6,
-      level: 1,
       isLoading: true
     }
   }

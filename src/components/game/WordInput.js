@@ -53,14 +53,14 @@ export default class WordInput extends Component {
     this.props.reduceTries()
   }
 
-  checkGameStatus = () => {
+  checkGameStatus() {
     if (this.wordMatch()) {
       alert("You won!");
       window.location.reload();
     }
   }
 
-  wordMatch = () => {
+  wordMatch() {
     let currentWord = [];
     const fields = document.getElementsByClassName('WordInput-bottom-border-input');
 
