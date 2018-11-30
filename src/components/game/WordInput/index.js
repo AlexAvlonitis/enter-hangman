@@ -41,7 +41,6 @@ const WordInput = ({word, onChange}) => {
     );
 }
 
-
 export default WordInput;
 
 WordInput.propTypes = {

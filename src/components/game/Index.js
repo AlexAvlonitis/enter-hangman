@@ -19,7 +19,6 @@ class Index extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-
   isItOverYet() {
     const {word, tries} = this.state;
     if (tries === 0) {
@@ -35,6 +34,13 @@ class Index extends Component {
     failedLetters.push(value);
     this.setState({ failedLetters });
     return true;
+  }
+  
+  reduceTries() {
+    const {tries} = this.state;
+    this.setState({ tries: tries - 1 }, () => {
+      this.isItOverYet();
+    });
   }
 
   revealLetters (indexes) {
@@ -61,18 +67,9 @@ class Index extends Component {
       this.reduceTries();
   }
 
-  reduceTries() {
-    const {tries} = this.state;
-    this.setState({ tries: tries - 1 }, () => {
-      this.isItOverYet();
-    });
-  }
-
-  checkGameStatus() {
-    if (this.wordMatch()) {
-      alert("You won!");
-      window.location.reload();
-    }
+  handleChange(event) {
+    this.checkLetter(event.target.value);
+    document.getElementById('letter-input').value = '';
   }
 
   wordMatch() {
@@ -85,11 +82,13 @@ class Index extends Component {
     return (currentWord.join('') === this.state.word.join('')) ? true : false
   }
 
-  handleChange(event) {
-    this.checkLetter(event.target.value);
-    document.getElementById('letter-input').value = '';
+  checkGameStatus() {
+    if (this.wordMatch()) {
+      alert("You won!");
+      window.location.reload();
+    }
   }
-
+  
   randomWordPicker(wordsArray) {
     return wordsArray[Math.floor(Math.random() * wordsArray.length)].split('');
   }
@@ -97,15 +96,17 @@ class Index extends Component {
   componentDidMount() {
     axios.get(wordsText).then( res => {
       this.setState({
-         word: this.randomWordPicker(res.data.split("\n")),
-         isLoading: false,
+         word: this.randomWordPicker(res.data.split("\n")
+               .filter( word => word.length > 2)
+          ),
+          isLoading: false,
       });
     })
   }
 
   render() {
     const {tries, word, isLoading, failedLetters} = this.state;
-    
+
     return ( word &&
       <div className="Game-Index">
         <div className="Game-Inputs">
@@ -115,8 +116,7 @@ class Index extends Component {
             </button>
           </p>
           <WordInputWithLoading {
-            ...{ isLoading, word, tries, failedLetters,
-                reduceTries: this.reduceTries,
+            ...{ isLoading, word,
                 onChange: this.handleChange
               }
             }
