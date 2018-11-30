@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import WordInput from './WordInput';
+import WordInput from './WordInput/index.js';
 import CanvasIndex from '../canvas/Index';
 import wordsText from '../../words.txt';
 import './Index.css';
 import axios from 'axios';
-import Loading from '../Loading'
+import Loading from '../Loading';
 
 class Index extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class Index extends Component {
   isItOverYet() {
     const {word, tries} = this.state;
     if (tries === 0) {
-      alert(`Game Over! \nThe word was: ${word}`);
+      alert(`Game Over! \nThe word was: ${word.join('')}`);
       window.location.reload();
     }
   }
@@ -116,7 +116,7 @@ class Index extends Component {
           <WordInputWithLoading {
             ...{ isLoading, word, tries, failedLetters,
                 reduceTries: this.reduceTries,
-                handleChange: this.handleChange
+                onChange: this.handleChange
               }
             }
           />
