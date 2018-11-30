@@ -1,0 +1,27 @@
+.WordInput-align-center {
+  text-align: center;
+}
+
+.WordInput-bottom-border-input {
+  font-size: 2rem;
+  text-align: center;
+  background-color: #282c34;
+  color: #ffffff;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  margin: 5px;
+  border-bottom: 1px, solid, #ffffff;
+  width : 50px;
+}
+
+
+.WordInput-enter-letter-input {
+  font-size: 2rem;
+  text-align: center;
+  background-color: #282c34;
+  color: #ffffff;
+  margin: 5px;
+  border: 1px, solid, #ffffff;
+  width : 50px;
+}
