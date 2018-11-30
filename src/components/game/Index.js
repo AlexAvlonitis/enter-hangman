@@ -30,8 +30,11 @@ class Index extends Component {
 
   addToFailedLetters(value) {
     const {failedLetters} = this.state;
+    if (failedLetters.includes(value))
+      return false;
     failedLetters.push(value);
     this.setState({ failedLetters });
+    return true;
   }
 
   revealLetters (indexes) {
@@ -54,10 +57,8 @@ class Index extends Component {
     if(indexes.length > 0) {
       this.revealLetters(indexes);
       this.checkGameStatus();
-    } else {
-      this.addToFailedLetters(value);
+    } else if (this.addToFailedLetters(value))
       this.reduceTries();
-    }
   }
 
   reduceTries() {
