@@ -7,54 +7,49 @@ export default class WordInput extends Component {
     super(props);
 
     this.state = {
-      value: '',
-      wrongLetters: [],
+      failedLetters: [],
       word: this.props.pickedWord.split('')
     };
     this.handleChange = this.handleChange.bind(this);
-
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.pickedWord !== this.props.pickedWord) 
-      this.setState({word: this.props.pickedWord.split('')});
+  addToFailedLetters(value) {
+    const {failedLetters} = this.state;
+    failedLetters.push(value);
+    this.setState({failedLetters: failedLetters})
   }
 
-  getAllIndexes() {
-    const {value, word} = this.state;
-
-   return (word.slice(1, word.length-1)
-    .map( (c, i) => c === value ? i+1 : null)
-    .filter( e => e )
+  getAllIndexes(value) {
+    const {word} = this.state;
+    return (word.slice(1, word.length-1)
+      .map( (c, i) => c === value ? i+1 : null)
+      .filter( e => e )
     ); 
   }
 
-  checkLetter() {
-    const indexes = this.getAllIndexes()
+  checkLetter(value) {
+    const indexes = this.getAllIndexes(value)
     if(indexes.length > 0) {
       this.revealLetters(indexes);
       this.checkGameStatus();
     } else {
-      this.addToFailedLetters();
+      this.addToFailedLetters(value);
       this.reduceTries();
     }
   }
 
-  revealLetters = (indexes) => {
-    indexes.map((index) => {
+  revealLetters (indexes) {
+    indexes.map( index => {
       this.findInput(index).value = this.state.word[index];
-    })
+    });
   }
 
-  findInput = (index) => {
+  findInput(index) {
     return document.querySelector(`[data-index='${index}']`);
   }
 
-  addToFailedLetters = () => {
-    this.state.wrongLetters.push(this.state.value);
-  }
 
-  reduceTries = () => {
+  reduceTries() {
     this.props.reduceTries()
   }
 
@@ -76,10 +71,8 @@ export default class WordInput extends Component {
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value}, () => {
-      this.checkLetter();
-      document.getElementById('letter-input').value = '';
-    });
+    this.checkLetter(event.target.value);
+    document.getElementById('letter-input').value = '';
   }
 
   renderInputs = (word, index) => {
@@ -131,7 +124,7 @@ export default class WordInput extends Component {
   }
 
   render() {
-    const {word, wrongLetters} = this.state;
+    const {word, failedLetters} = this.state;
     const {pickedWord} = this.props;
     
     return (  pickedWord && 
@@ -143,7 +136,7 @@ export default class WordInput extends Component {
         </p>
           { this.renderInput(word) }
         <p> Letters that don't exist: </p>
-        <p> {wrongLetters.join(', ')} </p>
+        <p> {failedLetters.join(', ')} </p>
       </div>
     );
   }
