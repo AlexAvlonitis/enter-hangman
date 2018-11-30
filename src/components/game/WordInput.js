@@ -21,17 +21,15 @@ export default class WordInput extends Component {
   }
 
   getAllIndexes() {
-    let indexes = [], i = -1;
+    const {value, word} = this.state;
 
-    while ((i = this.state.word.indexOf(this.state.value, i + 1)) != -1) {
-      if(i === 0 || i === this.state.word.length - 1) 
-        continue;  // don't save if value is first or last revealed letter
-      indexes.push(i);
-    }
-    return indexes;
+   return (word.slice(1, word.length-1)
+    .map( (c, i) => c === value ? i+1 : null)
+    .filter( e => e )
+    ); 
   }
 
-  checkLetter = () => {
+  checkLetter() {
     const indexes = this.getAllIndexes()
     if(indexes.length > 0) {
       this.revealLetters(indexes);
