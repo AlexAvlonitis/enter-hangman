@@ -31,7 +31,7 @@ class Index extends Component {
   addToFailedLetters(value) {
     const {failedLetters} = this.state;
     failedLetters.push(value);
-    this.setState({failedLetters: failedLetters})
+    this.setState({ failedLetters });
   }
 
   revealLetters (indexes) {
