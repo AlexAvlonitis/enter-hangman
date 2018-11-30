@@ -16,7 +16,7 @@ class Index extends Component {
       word: null,
       tries: 6,
       isLoading: true
-    }
+    };
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -28,20 +28,21 @@ class Index extends Component {
     }
   }
 
-  addToFailedLetters(value) {
-    const {failedLetters} = this.state;
-    if (failedLetters.includes(value) || !value.match(/[a-z]/i))
-      return false;
+  reduceTries(value) {
+    const {tries, failedLetters} = this.state;
     failedLetters.push(value);
-    this.setState({ failedLetters });
-    return true;
+    this.setState({ tries: tries-1, failedLetters }, this.isItOverYet);
   }
-  
-  reduceTries() {
-    const {tries} = this.state;
-    this.setState({ tries: tries - 1 }, () => {
-      this.isItOverYet();
-    });
+
+  checkGameStatus(indexes) {
+    const { word, currentWord } = this.state;
+    indexes.map( index => currentWord[index] = word[index]); /* copy correct characted to currentWord */
+
+    if (currentWord.join('') === word.join('')) {
+      alert("You won!");
+      window.location.reload();
+    }else
+      this.setState( {currentWord} );
   }
 
   revealLetters (indexes) {
@@ -61,26 +62,17 @@ class Index extends Component {
 
   checkLetter(value) {
     const indexes = this.getAllIndexes(value);
+    const {failedLetters} = this.state;
     if(indexes.length > 0) {
       this.revealLetters(indexes);
       this.checkGameStatus(indexes);
-    } else if (this.addToFailedLetters(value))
-      this.reduceTries();
+    } else if (!failedLetters.includes(value) && value.match(/[a-z]/i))
+      this.reduceTries(value);
   }
 
   handleChange(event) {
     this.checkLetter(event.target.value);
     document.getElementById('letter-input').value = '';
-  }
-
-  checkGameStatus(indexes) {
-    const { word, currentWord } = this.state;
-    indexes.map( index => currentWord[index] = word[index] )
-    if (currentWord.join('') === word.join('')) {
-      alert("You won!");
-      window.location.reload();
-    }else
-      this.setState( {currentWord} )
   }
   
   randomWordPicker(wordsArray) {
@@ -91,8 +83,8 @@ class Index extends Component {
     axios.get(wordsText).then( res => {
       const word = this.randomWordPicker(res.data.split("\n")
                .filter( word => word.length > 2));
-      const currentWord = word.map( (char, i) =>
-             (i === 0 || i === word.length-1) ?  char : null);
+      const currentWord = word.map( (char, i) =>   /* set first and last char of currentWord */
+             (i === 0 || i === word.length-1) ?  char : null); /* all others null */
       this.setState({
         word,
         currentWord,
