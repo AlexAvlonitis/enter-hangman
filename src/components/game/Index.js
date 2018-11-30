@@ -12,6 +12,7 @@ class Index extends Component {
 
     this.state = {
       failedLetters: [],
+      currentWord: [],
       word: null,
       tries: 6,
       isLoading: true
@@ -59,10 +60,10 @@ class Index extends Component {
   }
 
   checkLetter(value) {
-    const indexes = this.getAllIndexes(value)
+    const indexes = this.getAllIndexes(value);
     if(indexes.length > 0) {
       this.revealLetters(indexes);
-      this.checkGameStatus();
+      this.checkGameStatus(indexes);
     } else if (this.addToFailedLetters(value))
       this.reduceTries();
   }
@@ -72,21 +73,14 @@ class Index extends Component {
     document.getElementById('letter-input').value = '';
   }
 
-  wordMatch() {
-    let currentWord = [];
-    const fields = document.getElementsByClassName('WordInput-bottom-border-input');
-
-    for (let i = 0; i < fields.length; i++)
-      currentWord.push(fields[i].value);
-
-    return (currentWord.join('') === this.state.word.join('')) ? true : false
-  }
-
-  checkGameStatus() {
-    if (this.wordMatch()) {
+  checkGameStatus(indexes) {
+    const { word, currentWord } = this.state;
+    indexes.map( index => currentWord[index] = word[index] )
+    if (currentWord.join('') === word.join('')) {
       alert("You won!");
       window.location.reload();
-    }
+    }else
+      this.setState( {currentWord} )
   }
   
   randomWordPicker(wordsArray) {
@@ -95,11 +89,14 @@ class Index extends Component {
   
   componentDidMount() {
     axios.get(wordsText).then( res => {
+      const word = this.randomWordPicker(res.data.split("\n")
+               .filter( word => word.length > 2));
+      const currentWord = word.map( (char, i) =>
+             (i === 0 || i === word.length-1) ?  char : null);
       this.setState({
-         word: this.randomWordPicker(res.data.split("\n")
-               .filter( word => word.length > 2)
-          ),
-          isLoading: false,
+        word,
+        currentWord,
+        isLoading: false,
       });
     })
   }
