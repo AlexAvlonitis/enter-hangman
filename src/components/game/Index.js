@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import WordInput from './WordInput/index.js';
 import CanvasIndex from '../canvas/Index';
-import wordsText from '../../words.txt';
+import animalsText from '../../animals.txt'
 import './Index.css';
 import axios from 'axios';
 import Loading from '../Loading';
@@ -18,6 +18,7 @@ class Index extends Component {
       isLoading: true,
       level: 1,
       score: 0,
+      category: '',
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -45,7 +46,7 @@ class Index extends Component {
     })
   }
 
-  startLevel(data) {
+  startLevel(data, category) {
     const {level} = this.state
     const word = this.randomWordPicker(data.split("\n")
              .filter( word => word.length === (1 + level+1)));
@@ -59,7 +60,18 @@ class Index extends Component {
       level: level+1,
       tries: 6,
       failedLetters: [],
+      category
     });
+  }
+
+  levelUp() {
+    const categories = [animalsText]
+    const i = Math.floor(Math.random() * categories.length);
+    const category = categories[i].match(/\/.+\/.+\/([a-z]+)/)[1];
+    
+    axios.get(categories[i]).then( res => {
+      this.startLevel(res.data, category);
+    })
   }
 
   checkGameStatus(indexes) {
@@ -69,9 +81,7 @@ class Index extends Component {
     if (currentWord.join('') === word.join('')) {
       alert("Good job!");
       this.setState({ isLoading: true})
-      axios.get(wordsText).then( res => {
-        this.startLevel(res.data);
-      })
+      this.levelUp();
     }else
       this.setState( {currentWord} );
   }
@@ -112,14 +122,18 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    axios.get(wordsText).then( res => {
-      this.startLevel(res.data);
+    const categories = [animalsText]
+    const i = Math.floor(Math.random() * categories.length);
+    const category = categories[i].match(/\/.+\/.+\/([a-z]+)/)[1];
+    
+    axios.get(categories[i]).then( res => {
+      this.startLevel(res.data, category);
     })
   }
 
   render() {
     const { tries, word, isLoading, failedLetters, 
-            level, score,
+            level, score, category,
           } = this.state;
 
     return ( word &&
@@ -140,7 +154,7 @@ class Index extends Component {
           <p> {failedLetters.join(', ')} </p>
         </div>
         <div className="Game-Canvas">
-          <CanvasIndex {...{tries, level: level-1, score}} />
+          <CanvasIndex {...{tries, level: level-1, score, category}} />
         </div>
       </div>
     );
