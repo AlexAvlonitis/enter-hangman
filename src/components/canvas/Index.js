@@ -103,14 +103,14 @@ export default class Index extends Component {
   }
 
   render() {
-    const {tries, level} = this.props
+    const {tries, level, score} = this.props
 
     return(
       <div>
         <canvas id="myCanvas" width="400" height="300">
           Your browser does not support the HTML5 canvas tag.
         </canvas>
-        <h3>Tries: {tries}, Level: {level}</h3>
+        <h3>Tries: {tries}, Level: {level}, Score: {score}</h3>
       </div>
     )
   }

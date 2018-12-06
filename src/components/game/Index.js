@@ -17,6 +17,7 @@ class Index extends Component {
       tries: 6,
       isLoading: true,
       level: 1,
+      score: 0,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -35,6 +36,14 @@ class Index extends Component {
     this.setState({ tries: tries-1, failedLetters }, this.isItOverYet);
   }
 
+  setScore(value) {
+    const {score, level} = this.state;
+    const factor = "aeiouy".match(value) ?  1.5 : 1;
+
+    this.setState({
+      score: score + factor*2 + level
+    })
+  }
 
   startLevel(data) {
     const {level} = this.state
@@ -48,7 +57,8 @@ class Index extends Component {
       currentWord,
       isLoading: false,
       level: level+1,
-      tries: 6
+      tries: 6,
+      failedLetters: [],
     });
   }
 
@@ -87,6 +97,7 @@ class Index extends Component {
     if(indexes.length > 0) {
       this.revealLetters(indexes);
       this.checkGameStatus(indexes);
+      this.setScore(value);
     } else if (!failedLetters.includes(value) && value.match(/[a-z]/i))
       this.reduceTries(value);
   }
@@ -107,7 +118,9 @@ class Index extends Component {
   }
 
   render() {
-    const {tries, word, isLoading, failedLetters, level} = this.state;
+    const { tries, word, isLoading, failedLetters, 
+            level, score,
+          } = this.state;
 
     return ( word &&
       <div className="Game-Index">
@@ -127,7 +140,7 @@ class Index extends Component {
           <p> {failedLetters.join(', ')} </p>
         </div>
         <div className="Game-Canvas">
-          <CanvasIndex {...{tries, level: level-1}} />
+          <CanvasIndex {...{tries, level: level-1, score}} />
         </div>
       </div>
     );
