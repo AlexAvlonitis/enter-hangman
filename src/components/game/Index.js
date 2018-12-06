@@ -3,6 +3,7 @@ import WordInput from './WordInput/index.js';
 import CanvasIndex from '../canvas/Index';
 import animals from '../../animals.txt'
 import countries from '../../countries.txt'
+import fruits from '../../fruits.txt'
 import './Index.css';
 import axios from 'axios';
 import Loading from '../Loading';
@@ -42,7 +43,12 @@ class Index extends Component {
     const {score, level, currentWord} = this.state;
     const factor = "aeiouy".match(value) ?  1.5 : 1;
 
-    if (!currentWord.includes(value))
+    /* increase score if value isn't yet in currentWord  */
+    /* deal with case when value in currentWord because it's the first or last char */
+    if (!currentWord.includes(value) 
+      || ( (value === currentWord[currentWord.length-1] || value === currentWord[0])
+          && !currentWord.slice(1, currentWord.length-1).includes(value)
+          )) 
       this.setState({
         score: score + factor*2 + level
       })
@@ -67,7 +73,7 @@ class Index extends Component {
   }
 
   levelUp() {
-    const categories = [animals, countries]
+    const categories = [animals, countries, fruits]
     const i = Math.floor(Math.random() * categories.length);
     const category = categories[i].match(/\/.+\/.+\/([a-z]+)/)[1];
     
@@ -82,7 +88,7 @@ class Index extends Component {
 
     if (currentWord.join('') === word.join('')) {
       alert("Good job!");
-      if ( level >= 13 ){ /* Max available word in all dictionaries */
+      if ( level >= 12 ){ /* Max available word in all dictionaries + 1 */
         alert("You won !!")
         window.location.reload();
       }else{
@@ -129,7 +135,7 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    const categories = [animals, countries]
+    const categories = [animals, countries, fruits]
     const i = Math.floor(Math.random() * categories.length);
     const category = categories[i].match(/\/.+\/.+\/([a-z]+)/)[1];
 
