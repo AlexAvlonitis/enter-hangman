@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import WordInput from './WordInput/index.js';
 import CanvasIndex from '../canvas/Index';
-import animalsText from '../../animals.txt'
+import animals from '../../animals.txt'
+import countries from '../../countries.txt'
 import './Index.css';
 import axios from 'axios';
 import Loading from '../Loading';
@@ -38,12 +39,13 @@ class Index extends Component {
   }
 
   setScore(value) {
-    const {score, level} = this.state;
+    const {score, level, currentWord} = this.state;
     const factor = "aeiouy".match(value) ?  1.5 : 1;
 
-    this.setState({
-      score: score + factor*2 + level
-    })
+    if (!currentWord.includes(value))
+      this.setState({
+        score: score + factor*2 + level
+      })
   }
 
   startLevel(data, category) {
@@ -65,7 +67,7 @@ class Index extends Component {
   }
 
   levelUp() {
-    const categories = [animalsText]
+    const categories = [animals, countries]
     const i = Math.floor(Math.random() * categories.length);
     const category = categories[i].match(/\/.+\/.+\/([a-z]+)/)[1];
     
@@ -75,13 +77,18 @@ class Index extends Component {
   }
 
   checkGameStatus(indexes) {
-    const { word, currentWord } = this.state;
+    const { word, currentWord, level } = this.state;
     indexes.map( index => currentWord[index] = word[index]); /* copy correct characted to currentWord */
 
     if (currentWord.join('') === word.join('')) {
       alert("Good job!");
-      this.setState({ isLoading: true})
-      this.levelUp();
+      if ( level >= 13 ){ /* Max available word in all dictionaries */
+        alert("You won !!")
+        window.location.reload();
+      }else{
+        this.setState({ isLoading: true})
+        this.levelUp();
+      }
     }else
       this.setState( {currentWord} );
   }
@@ -106,8 +113,8 @@ class Index extends Component {
     const {failedLetters} = this.state;
     if(indexes.length > 0) {
       this.revealLetters(indexes);
-      this.checkGameStatus(indexes);
       this.setScore(value);
+      this.checkGameStatus(indexes);
     } else if (!failedLetters.includes(value) && value.match(/[a-z]/i))
       this.reduceTries(value);
   }
@@ -122,10 +129,10 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    const categories = [animalsText]
+    const categories = [animals, countries]
     const i = Math.floor(Math.random() * categories.length);
     const category = categories[i].match(/\/.+\/.+\/([a-z]+)/)[1];
-    
+
     axios.get(categories[i]).then( res => {
       this.startLevel(res.data, category);
     })
