@@ -2,15 +2,9 @@ import React, { Component } from 'react';
 import './Index.css';
 
 export default class Index extends Component {
-  componentDidMount = () => {
-    this.canvas = document.getElementById("myCanvas");
-    this.ctx = this.canvas.getContext("2d");
-
-    this.drawHanger()
-  }
 
   componentDidUpdate = (prevProps) => {
-    if (prevProps.tries !== this.props.tries) {
+    if (prevProps.tries !== this.props.tries)
       switch (this.props.tries) {
         case 6:
           break;
@@ -37,7 +31,6 @@ export default class Index extends Component {
           alert('You broke the hangman');
           window.location.reload();
       }
-    }
   }
 
   drawLeftArm = () => {
@@ -102,13 +95,22 @@ export default class Index extends Component {
     this.ctx.fillText("RIP", 300, 50);
   }
 
+  componentDidMount () {
+    this.canvas = document.getElementById("myCanvas");
+    this.ctx = this.canvas.getContext("2d");
+
+    this.drawHanger()
+  }
+
   render() {
+    const {tries, level} = this.props
+
     return(
       <div>
         <canvas id="myCanvas" width="400" height="300">
           Your browser does not support the HTML5 canvas tag.
         </canvas>
-        <h3>Tries: {this.props.tries} </h3>
+        <h3>Tries: {tries}, Level: {level}</h3>
       </div>
     )
   }

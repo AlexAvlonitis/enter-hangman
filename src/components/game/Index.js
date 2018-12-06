@@ -35,13 +35,34 @@ class Index extends Component {
     this.setState({ tries: tries-1, failedLetters }, this.isItOverYet);
   }
 
+
+  startLevel(data) {
+    const {level} = this.state
+    const word = this.randomWordPicker(data.split("\n")
+             .filter( word => word.length === (1 + level+1)));
+    const currentWord = word.map( (char, i) =>   /* set first and last char of currentWord */
+           (i === 0 || i === word.length-1) ?  char : null); /* all others null */
+    this.setState({
+      word,
+      currentWord,
+      isLoading: false,
+      level: level+1,
+      tries: 6
+    });
+  }
+
   checkGameStatus(indexes) {
     const { word, currentWord } = this.state;
     indexes.map( index => currentWord[index] = word[index]); /* copy correct characted to currentWord */
 
     if (currentWord.join('') === word.join('')) {
-      alert("You won!");
-      window.location.reload();
+      alert("Good job!");
+      this.setState({       /* reset game */
+        isLoading: true,
+      })
+      axios.get(wordsText).then( res => {
+        this.startLevel(res.data);
+      })
     }else
       this.setState( {currentWord} );
   }
@@ -79,19 +100,6 @@ class Index extends Component {
   randomWordPicker(wordsArray) {
     return wordsArray[Math.floor(Math.random() * wordsArray.length)].split('');
   }
-  
-  startLevel(data) {
-    const {level} = this.state
-    const word = this.randomWordPicker(data.split("\n")
-             .filter( word => word.length === (2+ level)));
-    const currentWord = word.map( (char, i) =>   /* set first and last char of currentWord */
-           (i === 0 || i === word.length-1) ?  char : null); /* all others null */
-    this.setState({
-      word,
-      currentWord,
-      isLoading: false,
-    });
-  }
 
   componentDidMount() {
     axios.get(wordsText).then( res => {
@@ -100,7 +108,7 @@ class Index extends Component {
   }
 
   render() {
-    const {tries, word, isLoading, failedLetters} = this.state;
+    const {tries, word, isLoading, failedLetters, level} = this.state;
 
     return ( word &&
       <div className="Game-Index">
@@ -120,7 +128,7 @@ class Index extends Component {
           <p> {failedLetters.join(', ')} </p>
         </div>
         <div className="Game-Canvas">
-          <CanvasIndex {...{tries}} />
+          <CanvasIndex {...{tries, level: level-1}} />
         </div>
       </div>
     );
