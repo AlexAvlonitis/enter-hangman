@@ -42,6 +42,7 @@ class Index extends Component {
              .filter( word => word.length === (1 + level+1)));
     const currentWord = word.map( (char, i) =>   /* set first and last char of currentWord */
            (i === 0 || i === word.length-1) ?  char : null); /* all others null */
+
     this.setState({
       word,
       currentWord,
@@ -57,9 +58,7 @@ class Index extends Component {
 
     if (currentWord.join('') === word.join('')) {
       alert("Good job!");
-      this.setState({       /* reset game */
-        isLoading: true,
-      })
+      this.setState({ isLoading: true})
       axios.get(wordsText).then( res => {
         this.startLevel(res.data);
       })
