@@ -15,7 +15,8 @@ class Index extends Component {
       currentWord: [],
       word: null,
       tries: 6,
-      isLoading: true
+      isLoading: true,
+      level: 1,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -79,17 +80,22 @@ class Index extends Component {
     return wordsArray[Math.floor(Math.random() * wordsArray.length)].split('');
   }
   
+  startLevel(data) {
+    const {level} = this.state
+    const word = this.randomWordPicker(data.split("\n")
+             .filter( word => word.length === (2+ level)));
+    const currentWord = word.map( (char, i) =>   /* set first and last char of currentWord */
+           (i === 0 || i === word.length-1) ?  char : null); /* all others null */
+    this.setState({
+      word,
+      currentWord,
+      isLoading: false,
+    });
+  }
+
   componentDidMount() {
     axios.get(wordsText).then( res => {
-      const word = this.randomWordPicker(res.data.split("\n")
-               .filter( word => word.length > 2));
-      const currentWord = word.map( (char, i) =>   /* set first and last char of currentWord */
-             (i === 0 || i === word.length-1) ?  char : null); /* all others null */
-      this.setState({
-        word,
-        currentWord,
-        isLoading: false,
-      });
+      this.startLevel(res.data);
     })
   }
 
