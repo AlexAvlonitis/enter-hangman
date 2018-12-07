@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import './Index.css';
 
 export default class Index extends Component {
-
   componentDidUpdate = (prevProps) => {
+    if (prevProps.level !== this.props.level)
+      this.clearHangman();
+
     if (prevProps.tries !== this.props.tries)
       switch (this.props.tries) {
         case 6:
@@ -31,6 +33,14 @@ export default class Index extends Component {
           alert('You broke the hangman');
           window.location.reload();
       }
+  }
+
+  clearHangman = () => {
+    this.canvas = document.getElementById("myCanvas");
+    this.ctx = this.canvas.getContext('2d');
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.drawHanger();
   }
 
   drawLeftArm = () => {
@@ -99,17 +109,22 @@ export default class Index extends Component {
     this.canvas = document.getElementById("myCanvas");
     this.ctx = this.canvas.getContext("2d");
 
-    this.drawHanger()
+    this.drawHanger();
+  }
+
+  showCategory() {
+    const { category } = this.props;
+
+    return category.split('').map((c, i) => i === 0 ? c.toUpperCase() : c).join('')
   }
 
   render() {
-    const {tries, level, score, category} = this.props
-    
+    const { tries, level, score } = this.props;
+
     return(
       <div>
-        <h3>Category: {
-          category.split('').map( ( c,i) => i === 0 ? c.toUpperCase() : c ).join('')
-          }
+        <h3>
+          Category: {this.showCategory()}
         </h3>
         <canvas id="myCanvas" width="400" height="300">
           Your browser does not support the HTML5 canvas tag.

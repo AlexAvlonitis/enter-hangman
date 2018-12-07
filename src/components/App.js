@@ -7,16 +7,13 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { 
-      gameStarted: false,
-    }
+    this.state = { gameStarted: false }
+
     this.startGame = this.startGame.bind(this);
   }
 
   startGame() {
-    this.setState({
-      gameStarted: true,
-    })
+    this.setState({ gameStarted: true });
   }
 
   componentDidMount() {
@@ -31,7 +28,7 @@ class App extends Component {
       <div className="App">
         { this.state.gameStarted ?
           <GameIndex /> :
-          <StartScreen 
+          <StartScreen
             onClick={() => this.startGame()}
           />
         }

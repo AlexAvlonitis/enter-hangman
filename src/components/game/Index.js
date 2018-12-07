@@ -24,6 +24,7 @@ class Index extends Component {
       score: 0,
       category: '',
     };
+
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -32,7 +33,8 @@ class Index extends Component {
   }
 
   isItOverYet() {
-    const {word, tries} = this.state;
+    const { word, tries } = this.state;
+
     if (tries === 0) {
       alert(`Game Over! \nThe word was: ${word.join('')}`);
       window.location.reload();
@@ -40,23 +42,24 @@ class Index extends Component {
   }
 
   reduceTries(value) {
-    const {tries, failedLetters} = this.state;
+    const { tries, failedLetters } = this.state;
+
     failedLetters.push(value);
-    this.setState({ tries: tries-1, failedLetters }, this.isItOverYet);
+    this.setState({ tries: tries - 1, failedLetters }, this.isItOverYet);
   }
 
   setScore(value) {
-    const {score, level, currentWord} = this.state;
+    const { score, level, currentWord } = this.state;
     const factor = "aeiouy".match(value) ?  1.5 : 1;
 
     /* increase score if value isn't yet in currentWord  */
     /* deal with case when value in currentWord because it's the first or last char */
-    if (!currentWord.includes(value)
-      || ( (value === currentWord[currentWord.length-1] || value === currentWord[0])
-          && !currentWord.slice(1, currentWord.length-1).includes(value)
-          ))
+    if (!currentWord.includes(value) ||
+      ((value === currentWord[currentWord.length-1] || value === currentWord[0]) &&
+      !currentWord.slice(1, currentWord.length-1).includes(value)))
+
       this.setState({
-        score: score + factor*2 + level
+        score: score + factor * 2 + level
       })
   }
 
@@ -111,7 +114,8 @@ class Index extends Component {
   }
 
   revealLetters (indexes) {
-    const {word} = this.state;
+    const { word } = this.state;
+
     indexes.map( index =>
       document.querySelector(`[data-index='${index}']`).value = word[index]
     );
@@ -129,6 +133,7 @@ class Index extends Component {
   checkLetter(value) {
     const indexes = this.getAllIndexes(value);
     const {failedLetters} = this.state;
+
     if(indexes.length > 0) {
       this.revealLetters(indexes);
       this.setScore(value);
